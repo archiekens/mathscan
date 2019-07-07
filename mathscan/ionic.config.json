@@ -1,0 +1,7 @@
+{
+  "name": "mathscan",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

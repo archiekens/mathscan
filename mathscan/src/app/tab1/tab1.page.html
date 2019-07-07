@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Scan Word
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <img [src]="selectedImage" *ngIf="selectedImage">
+  <ion-button (click)="selectSource()">Select Image</ion-button>
+  <ion-button (click)="recognizeImage()" [disabled]="!selectedImage">Recognize Image</ion-button>
+  <ion-text *ngIf="isScanning">Scanning in progress...</ion-text>
+  <ion-progress-bar [value]="progress"></ion-progress-bar>
+  <ion-card>
+    <ion-card-header>
+      <h1>Image Text:</h1>
+    </ion-card-header>
+    <ion-card-content>
+      {{ imageText }}
+    </ion-card-content>
+  </ion-card>
+</ion-content>

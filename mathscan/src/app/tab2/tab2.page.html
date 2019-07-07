@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Search
+    </ion-title>
+    <ion-searchbar (ionChange)="search()" [(ngModel)]="word"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item detail *ngFor="let word of words" (click)="openModal(word)" button>
+      <ion-label>{{word.term}}</ion-label>
+    </ion-item>
+    <ion-infinite-scroll threshold="50%" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+  </ion-list>
+  
+</ion-content>
