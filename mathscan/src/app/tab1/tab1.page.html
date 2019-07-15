@@ -1,23 +1,44 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Scan Word
+      Camera Math Dictionary
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <img [src]="selectedImage" *ngIf="selectedImage">
-  <ion-button (click)="selectSource()">Select Image</ion-button>
-  <ion-button (click)="recognizeImage()" [disabled]="!selectedImage">Recognize Image</ion-button>
-  <ion-text *ngIf="isScanning">Scanning in progress...</ion-text>
-  <ion-progress-bar [value]="progress"></ion-progress-bar>
-  <ion-card>
-    <ion-card-header>
-      <h1>Image Text:</h1>
-    </ion-card-header>
-    <ion-card-content>
-      {{ imageText }}
-    </ion-card-content>
-  </ion-card>
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <img [src]="selectedImage" alt="No Image Selected">
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button (click)="selectSource()">Select Image</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <h2 *ngIf="isScanning">{{ status }} <ion-spinner name="crescent"></ion-spinner> </h2>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-list *ngIf="!isScanning && selectedImage != '/assets/default.jpg'">
+    <ion-list-header>
+      <ion-label>Search results for {{ word }} :</ion-label>
+    </ion-list-header>
+    <ion-item detail *ngFor="let word of words" (click)="openModal(word)" button>
+      <ion-label>{{ word.term }}</ion-label>
+    </ion-item>
+    <ion-item *ngIf="words.length == 0">
+      <ion-label>No result</ion-label>
+    </ion-item>
+    <ion-infinite-scroll threshold="50%" (ionInfinite)="loadMore($event)" *ngIf="!disableLoad">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="Loading more data...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </ion-list>
 </ion-content>

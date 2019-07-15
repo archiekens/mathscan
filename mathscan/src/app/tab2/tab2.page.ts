@@ -39,7 +39,6 @@ export class Tab2Page {
   }
 
   loadMore(event) {
-    console.log('ayy lmao');
     this.offset += this.limit;
     setTimeout(() => {
       this.getWords();

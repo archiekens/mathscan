@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Camera, PictureSourceType, DestinationType } from '@ionic-native/camera/ngx';
 import * as Tesseract from 'tesseract.js'
 import { ActionSheetController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
+import { IonInfiniteScroll } from '@ionic/angular';
 
 @Component({
   selector: 'app-tab1',
@@ -13,10 +15,16 @@ import { ActionSheetController } from '@ionic/angular';
 })
 export class Tab1Page {
 
-  selectedImage: string;
-  imageText: string;
+  selectedImage = '/assets/default.jpg';
+  word: string;
   progress: number;
   isScanning: boolean = false;
+  status: string = "Idle";
+  words = [];
+  limit = 10;
+  offset = 0;
+  db = null;
+  disableLoad = false;
 
   constructor(
     private sqlite: SQLite,
@@ -24,6 +32,8 @@ export class Tab1Page {
     private http: HttpClient,
     private camera: Camera,
     private actionSheetCtrl: ActionSheetController,
+    private zone: NgZone,
+    public alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -34,6 +44,7 @@ export class Tab1Page {
             location: 'default'
           })
             .then((db: any) => {
+               this.db = db;
                db.executeSql("SELECT name FROM sqlite_master WHERE type='table' AND name='words';", [])
                 .then((resultSet) => {
                   if (!resultSet.rows.item(0)) {
@@ -54,14 +65,15 @@ export class Tab1Page {
     let actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
-          text: 'Use Library',
-          handler: () => {
-            this.getPicture(PictureSourceType.PHOTOLIBRARY);
-          }
-        }, {
-          text: 'Capture Image',
+          text: 'Take picture',
           handler: () => {
             this.getPicture(PictureSourceType.CAMERA);
+          }
+        },
+        {
+          text: 'Choose file',
+          handler: () => {
+            this.getPicture(PictureSourceType.PHOTOLIBRARY);
           }
         }, {
           text: 'Cancel',
@@ -84,26 +96,80 @@ export class Tab1Page {
       correctOrientation: true
     }).then((imageData) => {
       this.selectedImage = `data:image/jpeg;base64,${imageData}`;
+      this.recognizeImage();
     });
 
   }
 
   recognizeImage() {
+    this.progress = 0;
     this.isScanning = true;
+    this.status = "Scanning";
     Tesseract.recognize(this.selectedImage)
     .progress(message => {
-      console.log(message);
-      this.progress = message.progress;
+      this.zone.run(() => {
+        if (message.status == "recognizing text") {
+          this.progress = message.progress;
+        }
+      });
     })
     .then(result => {
-      this.imageText = result.text;
-      this.progress = 1;
-      this.isScanning = false;
+      this.zone.run(() => {
+        this.word = result.text.toLowerCase().trim();
+        this.progress = 1;
+        this.isScanning = false;
+        this.status = "Done!";
+        this.search();
+      });
     })
     .catch(err => {
       this.isScanning = false;
-      console.error(err)
+      console.error(err);
     });
+  }
+
+  search() {
+    this.words = [];
+    this.offset = 0;
+    this.getWords();
+  }
+
+  loadMore(event) {
+    var e = event;
+    this.offset += this.limit;
+    setTimeout(() => {
+      this.getWords();
+      e.timeout.complete();
+    }, 500);
+  }
+
+  async openModal(word) {
+    const alert = await this.alertController.create({
+      message: word.definition,
+      buttons: ['Close']
+    });
+
+    await alert.present();
+  }
+
+  getWords() {
+    this.disableLoad = true;
+    this.db.executeSql("SELECT * FROM words WHERE term LIKE '" + this.word + "%' LIMIT " + this.limit + " OFFSET " + this.offset, [])
+      .then((resultSet) => {
+        for(var x = 0; x < resultSet.rows.length; x++) {
+          this.words.push({
+            term: resultSet.rows.item(x).term,
+            definition: resultSet.rows.item(x).definition
+          });
+        }
+        if (resultSet.rows.length != 0) {
+          this.disableLoad = false;
+        }
+      })
+      .catch(e => {
+        this.disableLoad = true;
+        console.log(e)
+      });
   }
 
 }
