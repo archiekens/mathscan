@@ -86,12 +86,12 @@ export class Tab1Page {
  
   getPicture(sourceType: PictureSourceType) {
     this.camera.getPicture({
-      quality: 50,
-      targetHeight: 512,
-      targetWidth: 512,
+      quality: 100,
+      targetHeight: 480,
+      targetWidth: 720,
       destinationType: this.camera.DestinationType.DATA_URL,
       sourceType: sourceType,
-      allowEdit: false,
+      allowEdit: true,
       saveToPhotoAlbum: false,
       correctOrientation: true
     }).then((imageData) => {
@@ -137,10 +137,11 @@ export class Tab1Page {
   loadMore(event) {
     var e = event;
     this.offset += this.limit;
-    setTimeout(() => {
-      this.getWords();
-      e.timeout.complete();
-    }, 500);
+    this.getWords();
+    // setTimeout(() => {
+    //   this.getWords();
+    //   e.timeout.complete();
+    // }, 500);
   }
 
   async openModal(word) {

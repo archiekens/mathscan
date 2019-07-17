@@ -15,7 +15,7 @@
     <ion-item *ngIf="words.length == 0">
       <ion-label>No result</ion-label>
     </ion-item>
-    <ion-infinite-scroll threshold="50%" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll threshold="50%" (ionInfinite)="loadMore($event)" *ngIf="!disableLoad">
       <ion-infinite-scroll-content
         loadingSpinner="bubbles"
         loadingText="Loading more data...">

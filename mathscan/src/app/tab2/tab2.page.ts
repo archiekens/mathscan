@@ -40,10 +40,11 @@ export class Tab2Page {
 
   loadMore(event) {
     this.offset += this.limit;
-    setTimeout(() => {
-      this.getWords();
-      event.timeout.complete();
-    }, 500);
+    this.getWords();
+    // setTimeout(() => {
+    //   this.getWords();
+    //   event.timeout.complete();
+    // }, 500);
   }
 
   async openModal(word) {
