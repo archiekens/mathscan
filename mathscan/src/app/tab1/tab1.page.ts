@@ -7,6 +7,8 @@ import * as Tesseract from 'tesseract.js'
 import { ActionSheetController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import { IonInfiniteScroll } from '@ionic/angular';
+import { FilePath } from '@ionic-native/file-path/ngx';
+import { File } from '@ionic-native/file/ngx';
 
 @Component({
   selector: 'app-tab1',
@@ -25,6 +27,7 @@ export class Tab1Page {
   offset = 0;
   db = null;
   disableLoad = false;
+  tesseract;
 
   constructor(
     private sqlite: SQLite,
@@ -33,8 +36,16 @@ export class Tab1Page {
     private camera: Camera,
     private actionSheetCtrl: ActionSheetController,
     private zone: NgZone,
-    public alertController: AlertController
-  ) {}
+    public alertController: AlertController,
+    private filePath: FilePath,
+    private file: File,
+  ) {
+      this.tesseract = Tesseract.create({
+        langPath: file.applicationDirectory + 'www/assets/lib/tesseract.js-',
+        corePath: file.applicationDirectory + 'www/assets/lib/tesseract.js-core_0.1.0.js',
+        workerPath: file.applicationDirectory + 'www/assets/lib/tesseract.js-worker_1.0.10.js',
+      });
+  }
 
   ngOnInit() {
     this.http.get('assets/words.txt', {responseType: 'text'})
@@ -105,8 +116,9 @@ export class Tab1Page {
     this.progress = 0;
     this.isScanning = true;
     this.status = "Scanning";
-    Tesseract.recognize(this.selectedImage)
+    this.tesseract.recognize(this.selectedImage, {lang:'eng'})
     .progress(message => {
+      console.log(message);
       this.zone.run(() => {
         if (message.status == "recognizing text") {
           this.progress = message.progress;
@@ -124,7 +136,7 @@ export class Tab1Page {
     })
     .catch(err => {
       this.isScanning = false;
-      console.error(err);
+      console.log(err);
     });
   }
 
@@ -155,7 +167,7 @@ export class Tab1Page {
 
   getWords() {
     this.disableLoad = true;
-    this.db.executeSql("SELECT * FROM words WHERE term LIKE '" + this.word + "%' LIMIT " + this.limit + " OFFSET " + this.offset, [])
+    this.db.executeSql("SELECT * FROM words WHERE term LIKE '" + this.word + "%' ORDER BY term COLLATE NOCASE ASC LIMIT " + this.limit + " OFFSET " + this.offset, [])
       .then((resultSet) => {
         for(var x = 0; x < resultSet.rows.length; x++) {
           this.words.push({

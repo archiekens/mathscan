@@ -91,5 +91,7 @@
     <allow-navigation href="http://192.168.1.104:8101" sessionid="e770e4d8" />
     <plugin name="uk.co.workingedge.cordova.plugin.sqliteporter" spec="1.1.0" />
     <plugin name="cordova-plugin-camera" spec="4.0.3" />
+    <plugin name="cordova-plugin-filepath" spec="1.5.5" />
+    <plugin name="cordova-plugin-file" spec="6.0.2" />
     <engine name="android" spec="7.1.4" />
 </widget>

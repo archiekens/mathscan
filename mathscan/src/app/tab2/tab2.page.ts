@@ -58,7 +58,7 @@ export class Tab2Page {
 
   getWords() {
     this.disableLoad = true;
-    this.db.executeSql("SELECT * FROM words WHERE term LIKE '" + this.word + "%' LIMIT " + this.limit + " OFFSET " + this.offset, [])
+    this.db.executeSql("SELECT * FROM words WHERE term LIKE '" + this.word + "%' ORDER BY term COLLATE NOCASE ASC LIMIT " + this.limit + " OFFSET " + this.offset, [])
       .then((resultSet) => {
         for(var x = 0; x < resultSet.rows.length; x++) {
           this.words.push({
