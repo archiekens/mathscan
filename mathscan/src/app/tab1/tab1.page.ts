@@ -116,7 +116,7 @@ export class Tab1Page {
     this.progress = 0;
     this.isScanning = true;
     this.status = "Scanning";
-    this.tesseract.recognize(this.selectedImage, {lang:'eng'})
+    Tesseract.recognize(this.selectedImage, {lang:'eng'})
     .progress(message => {
       console.log(message);
       this.zone.run(() => {
