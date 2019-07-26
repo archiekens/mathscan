@@ -8,3 +8,9 @@ img {
 	object-fit: contain;
     object-position: center;
 }
+
+:host {
+  ion-content {
+    --background: center / cover no-repeat url('/assets/bg.png');
+  }
+}
