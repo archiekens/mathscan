@@ -3,11 +3,11 @@
     <ion-title>
       Camera Math Dictionary
     </ion-title>
-    <ion-searchbar (ionChange)="search()" [(ngModel)]="word"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-searchbar (ionChange)="search()" [(ngModel)]="word"></ion-searchbar>
   <ion-list>
     <ion-item detail *ngFor="let word of words" (click)="openModal(word)" button>
       <ion-label>{{word.term}}</ion-label>
