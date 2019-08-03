@@ -1,9 +1,15 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Tab Three
+      Camera Math Dictionary
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content></ion-content>
+<ion-content padding>
+    <ion-grid>
+        <ion-row align-items-center><ion-col><ion-button (click)="goToScan()">Scan</ion-button></ion-col></ion-row>
+        <ion-row align-items-center><ion-col><ion-button (click)="goToSearch()">Search</ion-button></ion-col></ion-row>
+        <ion-row align-items-center><ion-col><ion-button (click)="goToAbout()">About Us</ion-button></ion-col></ion-row>
+    </ion-grid>
+</ion-content>

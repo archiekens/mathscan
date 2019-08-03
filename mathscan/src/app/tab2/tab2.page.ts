@@ -22,14 +22,14 @@ export class Tab2Page {
     private sqlite: SQLite,
     public alertController: AlertController
   ) {
-    this.sqlite.create({
-      name: 'data.db',
-      location: 'default'
-    })
-      .then((db: any) => {
-        this.db = db;
-        this.getWords();
-      });
+    // this.sqlite.create({
+    //   name: 'data.db',
+    //   location: 'default'
+    // })
+    //   .then((db: any) => {
+    //     this.db = db;
+    //     this.getWords();
+    //   });
   }
 
   search() {

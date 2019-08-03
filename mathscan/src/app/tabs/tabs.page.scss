@@ -1,1 +1,5 @@
-
+:host {
+  ion-content {
+    --background: center / cover no-repeat url('/assets/bg.png');
+  }
+}

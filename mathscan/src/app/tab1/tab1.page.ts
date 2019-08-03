@@ -48,28 +48,28 @@ export class Tab1Page {
   }
 
   ngOnInit() {
-    this.http.get('assets/words.txt', {responseType: 'text'})
-        .subscribe(query => {
-          this.sqlite.create({
-            name: 'data.db',
-            location: 'default'
-          })
-            .then((db: any) => {
-               this.db = db;
-               db.executeSql("SELECT name FROM sqlite_master WHERE type='table' AND name='words';", [])
-                .then((resultSet) => {
-                  if (!resultSet.rows.item(0)) {
-                    let sql = query
-                    this.sqlitePorter.importSqlToDb(db, sql)
-                      .then(() => {
-                       console.log('Import successful');
-                      })
-                      .catch(e => console.error(e));
-                  }
-                })
-                .catch(e => console.log(e));
-            });
-        });
+    // this.http.get('assets/words.txt', {responseType: 'text'})
+    //     .subscribe(query => {
+    //       this.sqlite.create({
+    //         name: 'data.db',
+    //         location: 'default'
+    //       })
+    //         .then((db: any) => {
+    //            this.db = db;
+    //            db.executeSql("SELECT name FROM sqlite_master WHERE type='table' AND name='words';", [])
+    //             .then((resultSet) => {
+    //               if (!resultSet.rows.item(0)) {
+    //                 let sql = query
+    //                 this.sqlitePorter.importSqlToDb(db, sql)
+    //                   .then(() => {
+    //                    console.log('Import successful');
+    //                   })
+    //                   .catch(e => console.error(e));
+    //               }
+    //             })
+    //             .catch(e => console.log(e));
+    //         });
+    //     });
   }
 
   async selectSource() {    

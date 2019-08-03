@@ -1,1 +1,15 @@
 
+ion-grid {
+	padding-top: 150px;
+	text-align: center;
+}
+
+ion-button {
+	min-width: 160px;
+}
+
+:host {
+  ion-content {
+    --background: center / cover no-repeat url('/assets/bg.png');
+  }
+}
