@@ -25,7 +25,7 @@
     </ion-row>
   </ion-grid>
   <ion-list *ngIf="!isScanning && selectedImage != '/assets/default.jpg'">
-    <ion-list-header>
+    <ion-list-header *ngIf="words.length > 0">
       <ion-label>Search results for {{ word }} :</ion-label>
     </ion-list-header>
     <ion-item detail *ngFor="let word of words" (click)="openModal(word)" button>

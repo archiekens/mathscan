@@ -3,9 +3,30 @@ ion-grid {
 	padding-top: 200px;
 	text-align: center;
 	font-size: 18px;
+    color:white;
+    opacity: 0.8;
+}
+
+ion-row:nth-child(even) ion-col {
+    margin-bottom: 0px;
+}
+
+ion-row:nth-child(odd) {
+    font-size: 14px;
+}
+
+ion-row:nth-child(odd) ion-col {
+    margin-top: 0px;
 }
 
 .header {
 	font-size: 24px;
-	color: #1098EF;
+    font-weight: bold;
+	color: white;
+}
+
+:host {
+  ion-content {
+    --background: center / cover no-repeat url('/assets/bg.png');
+  }
 }
